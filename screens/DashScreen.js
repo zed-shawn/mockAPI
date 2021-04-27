@@ -9,22 +9,23 @@ import {
 import Colors from "../constants/Colors";
 import * as Scale from "../constants/Scale";
 import { FontAwesome } from "@expo/vector-icons";
+import PercentBox from "../components/design/PercentBox";
+import Button from "../components/design/Button";
 
 import Separator from "../components/design/Separator";
+import Slider from "@react-native-community/slider";
+import HideWithKeyboard from "react-native-hide-with-keyboard";
 
 const vs = Scale.verticalScale;
 
 const DashScreen = () => {
-  const [amountEntered, setAmountEntered] = useState("");
+  const [amountEntered, setAmountEntered] = useState(0);
   const firstName = "Akshay";
   const earned = "23443";
-  const withdrawCap = "4345";
-
-  const [low, setLow] = useState(0);
-  const [high, setHigh] = useState(100);
+  const withdrawCap = 4345;
 
   const inputAmount = (inputText) => {
-    setAmountEntered(inputText);
+    setAmountEntered(inputText.replace(/[^0-9]/g, ""));
   };
 
   return (
@@ -69,12 +70,80 @@ const DashScreen = () => {
               style={{ paddingTop: "1%" }}
             />
             <TextInput
-              value={amountEntered}
+              value={amountEntered.toString()}
               style={styles.amountInput}
               onChangeText={inputAmount}
-              placeholder="0"
             />
           </View>
+        </View>
+        <View style={{ flex: 1 }}>
+          <HideWithKeyboard>
+            <View style={styles.sliderRegion}>
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Text style={styles.sliderText}>0</Text>
+              </View>
+              <View style={{ flex: 2, alignItems: "center" }}>
+                <Slider
+                  style={{
+                    width: 200,
+                    height: 40,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  minimumValue={0}
+                  maximumValue={withdrawCap}
+                  minimumTrackTintColor="#FFFFFF"
+                  maximumTrackTintColor="#000000"
+                  onValueChange={(a) => {
+                    setAmountEntered(a.toString());
+                  }}
+                  step={100}
+                  minimumTrackTintColor={Colors.activeText}
+                  thumbTintColor={Colors.activeText}
+                />
+              </View>
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Text style={styles.sliderText}>{withdrawCap}</Text>
+              </View>
+            </View>
+          </HideWithKeyboard>
+        </View>
+        <View style={{ flex: 1 }}>
+          <HideWithKeyboard>
+            <View style={styles.percentBoxRegion}>
+              <PercentBox
+                value={25}
+                onPress={() => {
+                  setAmountEntered(Math.ceil(withdrawCap * 0.25));
+                }}
+              />
+              <PercentBox
+                value={50}
+                onPress={() => {
+                  setAmountEntered(Math.ceil(withdrawCap * 0.5));
+                }}
+              />
+              <PercentBox
+                value={75}
+                onPress={() => {
+                  setAmountEntered(Math.ceil(withdrawCap * 0.75));
+                }}
+              />
+              <PercentBox
+                value={100}
+                onPress={() => {
+                  setAmountEntered(withdrawCap);
+                }}
+              />
+            </View>
+          </HideWithKeyboard>
+        </View>
+        <View style={{ flex: 1 }}>
+          <HideWithKeyboard>
+            <View style={styles.butttonRegion}>
+              <Button title="PROCEED" />
+            </View>
+          </HideWithKeyboard>
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -97,7 +166,7 @@ const styles = StyleSheet.create({
     fontSize: vs(35),
     color: Colors.activeText,
   },
-  withdraw: { flex: 3, alignItems: "center", marginTop: "10%" },
+  withdraw: { flex: 3, alignItems: "center", marginTop: "7%" },
   withdrawText: {
     textAlign: "center",
     fontFamily: "ComoReg",
@@ -118,11 +187,11 @@ const styles = StyleSheet.create({
   },
   titleText: {
     textAlign: "center",
-    fontFamily: "ComoReg",
+    fontFamily: "ComoBold",
     fontSize: vs(38),
     color: Colors.activeText,
   },
-  withdrawHeader: { flex: 1, alignItems: "center", marginTop: "2%" },
+  withdrawHeader: { flex: 2, alignItems: "center", marginTop: "2%" },
   amountInput: {
     width: "30%",
     borderBottomWidth: 1,
@@ -133,6 +202,30 @@ const styles = StyleSheet.create({
   },
   slider: {
     marginBottom: 10,
+  },
+  sliderRegion: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    marginVertical: "1%",
+    width: "100%",
+  },
+  sliderText: {
+    fontSize: vs(20),
+    fontFamily: "ComoBold",
+    color: Colors.activeText,
+  },
+  percentBoxRegion: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    width: "100%",
+  },
+  butttonRegion: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: "10%",
   },
 });
 

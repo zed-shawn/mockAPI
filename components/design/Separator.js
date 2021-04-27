@@ -12,7 +12,7 @@ export default function Separator(props) {
         //        width: width,
         marginHorizontal: width,
         borderColor: Colors.accent,
-        borderWidth: 1,
+        borderTopWidth: 2,
         justifyContent: "center",
       }}
     ></View>
