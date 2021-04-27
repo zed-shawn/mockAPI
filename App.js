@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { enableScreens } from "react-native-screens";
 import { AppLoading } from "expo";
 import { Provider } from "react-redux";
@@ -18,9 +18,16 @@ function App() {
     });
     setFontLoaded(true);
   }
-  loadFonts();
+  useEffect(() => {
+    loadFonts();
+  }, []);
 
-  return <MainNavigator />;
+  if (fontLoaded) {
+    // If font has loaded, will load the app. Else will render nothing until font has loaded.
+    return <MainNavigator />;
+  } else {
+    return null;
+  }
 }
 
 /* export default function AppWrapper() {
