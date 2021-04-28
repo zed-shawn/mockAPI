@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { enableScreens } from "react-native-screens";
-import { AppLoading } from "expo";
 import { Provider } from "react-redux";
 import * as Font from "expo-font";
+import store from "./store/store";
 
 import MainNavigator from "./navigation/MainNavigator";
 
@@ -24,18 +24,14 @@ function App() {
 
   if (fontLoaded) {
     // If font has loaded, will load the app. Else will render nothing until font has loaded.
-    return <MainNavigator />;
+    return (
+      <Provider store={store}>
+        <MainNavigator />
+      </Provider>
+    );
   } else {
     return null;
   }
 }
-
-/* export default function AppWrapper() {
-  return (
-    //<Provider store={store}>
-    <App />
-    //</Provider>
-  );
-} */
 
 export default App;
