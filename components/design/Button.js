@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderColor: Colors.activeText,
-    elevation: vs(5),
+    elevation: vs(2),
     borderRadius:5
   },
   buttonText: {

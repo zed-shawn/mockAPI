@@ -29,6 +29,10 @@ export default function BillModal() {
   const commissionPercent = useSelector(
     (state) => state.user.commission.percentage
   );
+  const commissionAmount = Math.ceil(
+    commissionFlat + (disburseAmount * commissionPercent) / 100
+  );
+  const sumAmount = parseInt(disburseAmount) + commissionAmount;
 
   const closeModal = () => {
     dispatchModalHide();
@@ -73,7 +77,7 @@ export default function BillModal() {
       <ListItem
         title={false}
         leftText="Commission Charges"
-        rightText={disburseAmount}
+        rightText={commissionAmount}
       />
       <Separator width="80%" />
       <View style={styles.sumView}>
@@ -83,7 +87,7 @@ export default function BillModal() {
           color={Colors.activeText}
           style={{ paddingTop: "1%" }}
         />
-        <Text style={styles.sumText}>1242343</Text>
+        <Text style={styles.sumText}>{sumAmount}</Text>
       </View>
     </View>
   );

@@ -26,9 +26,9 @@ const vs = Scale.verticalScale;
 const DashScreen = () => {
   const dispatch = useDispatch();
   const [amountEntered, setAmountEntered] = useState(0);
-  const firstName = "Akshay";
-  const earned = "23443";
-  const withdrawCap = 4345;
+  const firstName = useSelector((state) => state.user.creds.firstName);
+  const earned = useSelector((state) => state.user.balance.monthlySalary);
+  const available = useSelector((state) => state.user.balance.available);
 
   const inputAmount = (inputText) => {
     setAmountEntered(inputText.replace(/[^0-9]/g, ""));
@@ -39,20 +39,21 @@ const DashScreen = () => {
       Alert.alert("Invalid amount", "Please enter a value greater than 0", [
         { text: "Cool!", style: "cancel", onPress: () => {} },
       ]);
-    } else if (amountEntered > withdrawCap) {
-      Alert.alert(
-        "Invalid amount",
-        `Please enter a value upto ${withdrawCap}`,
-        [{ text: "Cool!", style: "cancel", onPress: () => {} }]
-      );
+    } else if (amountEntered > available) {
+      Alert.alert("Invalid amount", `Please enter a value upto ${available}`, [
+        { text: "Cool!", style: "cancel", onPress: () => {} },
+      ]);
     } else {
-      dispatchBillModal();
+      dispatchBillModal(amountEntered);
     }
   };
 
-  const dispatchBillModal = useCallback(() => {
-    dispatch(ModalActions.displayBill(amountEntered));
-  }, [dispatch]);
+  const dispatchBillModal = useCallback(
+    (amount) => {
+      dispatch(ModalActions.displayBill(amount));
+    },
+    [dispatch]
+  );
 
   return (
     <DismissKeyboard>
@@ -83,7 +84,7 @@ const DashScreen = () => {
               color={Colors.activeText}
               style={{ paddingTop: "1%" }}
             />
-            <Text style={styles.numberText}>{withdrawCap}</Text>
+            <Text style={styles.numberText}>{available}</Text>
           </View>
         </View>
         <View style={{ width: "100%", alignItems: "center" }}>
@@ -121,7 +122,7 @@ const DashScreen = () => {
                       alignItems: "center",
                     }}
                     minimumValue={0}
-                    maximumValue={withdrawCap}
+                    maximumValue={available}
                     minimumTrackTintColor="#FFFFFF"
                     maximumTrackTintColor="#000000"
                     onValueChange={(a) => {
@@ -133,7 +134,7 @@ const DashScreen = () => {
                   />
                 </View>
                 <View style={{ flex: 1, alignItems: "center" }}>
-                  <Text style={styles.sliderText}>{withdrawCap}</Text>
+                  <Text style={styles.sliderText}>{available}</Text>
                 </View>
               </View>
             </HideWithKeyboard>
@@ -144,25 +145,25 @@ const DashScreen = () => {
                 <PercentBox
                   value={25}
                   onPress={() => {
-                    setAmountEntered(Math.ceil(withdrawCap * 0.25));
+                    setAmountEntered(Math.ceil(available * 0.25));
                   }}
                 />
                 <PercentBox
                   value={50}
                   onPress={() => {
-                    setAmountEntered(Math.ceil(withdrawCap * 0.5));
+                    setAmountEntered(Math.ceil(available * 0.5));
                   }}
                 />
                 <PercentBox
                   value={75}
                   onPress={() => {
-                    setAmountEntered(Math.ceil(withdrawCap * 0.75));
+                    setAmountEntered(Math.ceil(available * 0.75));
                   }}
                 />
                 <PercentBox
                   value={100}
                   onPress={() => {
-                    setAmountEntered(withdrawCap);
+                    setAmountEntered(available);
                   }}
                 />
               </View>
