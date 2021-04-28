@@ -8,7 +8,7 @@ import * as ModalActions from "../store/modalHandler";
 import { FontAwesome } from "@expo/vector-icons";
 
 import * as Scale from "../constants/Scale";
-//import CheckConnectivity from "../components/Connections/CheckConnectivity";
+import CheckConnectivity from "../components/connections/CheckConnectivity";
 
 const vs = Scale.verticalScale;
 
@@ -40,24 +40,25 @@ export default function BillModal() {
   const dispatchModalHide = useCallback(() => {
     dispatch(ModalActions.modalVisible(false));
   }, [dispatch]);
+  const dispatchResetAmount = useCallback(() => {
+    dispatch(ModalActions.resetAmount());
+  }, [dispatch]);
 
   const thank = () => {
     closeModal();
     Alert.alert(
-      "Report sumbitted",
-      "Thank you for helping us provide better experiences!",
+      "Request sumbitted",
+      "Your withdrawal would be processed soon!",
       [{ text: "Cool!", style: "cancel", onPress: () => {} }]
     );
   };
 
   const modalButton = async () => {
-    /* if (inputName.trim() !== "") {
-      const netStatus = await CheckConnectivity();
-      if (netStatus) {
-        dispatchReportFriend(friendHashID, inputName.trim());
-        thank();
-      }
-    } */
+    const netStatus = await CheckConnectivity();
+    if (netStatus) {
+      dispatchResetAmount();
+      thank();
+    }
   };
 
   const modalHeader = (

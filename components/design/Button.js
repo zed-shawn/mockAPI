@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.activeText,
     elevation: vs(2),
-    borderRadius:5
+    borderRadius: 5,
   },
   buttonText: {
     fontFamily: "ComoBold",

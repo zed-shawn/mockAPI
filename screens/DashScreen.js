@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   Text,
   StyleSheet,
@@ -29,9 +29,18 @@ const DashScreen = () => {
   const firstName = useSelector((state) => state.user.creds.firstName);
   const earned = useSelector((state) => state.user.balance.monthlySalary);
   const available = useSelector((state) => state.user.balance.available);
+  const resetAmount = useSelector((state) => state.modal.resetTime);
+
+  const kycBypass = useSelector((state) => state.user.status.kycBypass);
+  const kycComplete = useSelector((state) => state.user.status.kycComplete);
+  const disburseAllowed = useSelector(
+    (state) => state.user.status.disburseAllowed
+  );
 
   const inputAmount = (inputText) => {
-    setAmountEntered(inputText.replace(/[^0-9]/g, ""));
+    if (inputText !== "") {
+      setAmountEntered(parseInt(inputText.replace(/[^0-9]/g, "")));
+    }
   };
 
   const checkB4dispatch = () => {
@@ -43,10 +52,26 @@ const DashScreen = () => {
       Alert.alert("Invalid amount", `Please enter a value upto ${available}`, [
         { text: "Cool!", style: "cancel", onPress: () => {} },
       ]);
+    } else if (!kycBypass && !kycComplete) {
+      Alert.alert(
+        "KYC not complete",
+        `Please complete the KYC process before continuing.`,
+        [{ text: "Cool!", style: "cancel", onPress: () => {} }]
+      );
+    } else if (!disburseAllowed) {
+      Alert.alert(
+        "Withdrawal not allowed",
+        `Please contact the customer support.`,
+        [{ text: "Cool!", style: "cancel", onPress: () => {} }]
+      );
     } else {
       dispatchBillModal(amountEntered);
     }
   };
+
+  useEffect(() => {
+    setAmountEntered(0);
+  }, [resetAmount]);
 
   const dispatchBillModal = useCallback(
     (amount) => {
@@ -126,11 +151,12 @@ const DashScreen = () => {
                     minimumTrackTintColor="#FFFFFF"
                     maximumTrackTintColor="#000000"
                     onValueChange={(a) => {
-                      setAmountEntered(a.toString());
+                      setAmountEntered(a);
                     }}
                     step={100}
                     minimumTrackTintColor={Colors.activeText}
                     thumbTintColor={Colors.activeText}
+                    value={amountEntered}
                   />
                 </View>
                 <View style={{ flex: 1, alignItems: "center" }}>

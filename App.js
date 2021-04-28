@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import * as Font from "expo-font";
 import store from "./store/store";
 import link from "./components/connections/api";
+import CheckConnectivity from "./components/connections/CheckConnectivity";
 
 import MainNavigator from "./navigation/MainNavigator";
 import * as UserActions from "./store/userDetail";
@@ -16,16 +17,19 @@ function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
 
   async function loadClientDetails() {
-    let response = await fetch(link);
-    let data = await response.json();
-    if (data.status == true) {
-      dispatchUserDetails(data);
-    } else {
-      Alert.alert(
-        "Error retrieving data",
-        "Please contact the administrator.",
-        [{ text: "Cool", style: "cancel", onPress: () => {} }]
-      );
+    const netStatus = await CheckConnectivity();
+    if (netStatus) {
+      let response = await fetch(link);
+      let data = await response.json();
+      if (data.status == true) {
+        dispatchUserDetails(data);
+      } else {
+        Alert.alert(
+          "Error retrieving data",
+          "Please contact the administrator.",
+          [{ text: "Cool", style: "cancel", onPress: () => {} }]
+        );
+      }
     }
   }
 

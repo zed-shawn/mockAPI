@@ -1,10 +1,12 @@
 const initialState = {
   disburseAmount: 0,
   modalVisible: false,
+  resetTime: 0,
 };
 
 const MODAL_VISIBLE = "modalVisible";
 const DISPLAY_BILL = "displayBill";
+const RESET_AMOUNT = "resetAmount";
 
 export function modalVisible(state) {
   return async (dispatch) => {
@@ -30,6 +32,18 @@ export function displayBill(amount) {
     }
   };
 }
+export function resetAmount() {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: RESET_AMOUNT,
+        payload: {},
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
 
 const modalReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -43,6 +57,11 @@ const modalReducer = (state = initialState, action) => {
         ...state,
         disburseAmount: action.payload.amount,
         modalVisible: true,
+      };
+    case RESET_AMOUNT:
+      return {
+        ...state,
+        resetTime: new Date(),
       };
     default:
       return state;
