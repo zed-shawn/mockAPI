@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import Colors from "../constants/Colors";
 import * as Scale from "../constants/Scale";
@@ -12,14 +13,18 @@ import { FontAwesome } from "@expo/vector-icons";
 import PercentBox from "../components/design/PercentBox";
 import Button from "../components/design/Button";
 import DismissKeyboard from "../components/DismissKeyboard";
+import BillModal from "../components/BillModal";
+import { useDispatch, useSelector } from "react-redux";
 
 import Separator from "../components/design/Separator";
 import Slider from "@react-native-community/slider";
 import HideWithKeyboard from "react-native-hide-with-keyboard";
+import * as ModalActions from "../store/modalHandler";
 
 const vs = Scale.verticalScale;
 
 const DashScreen = () => {
+  const dispatch = useDispatch();
   const [amountEntered, setAmountEntered] = useState(0);
   const firstName = "Akshay";
   const earned = "23443";
@@ -29,9 +34,30 @@ const DashScreen = () => {
     setAmountEntered(inputText.replace(/[^0-9]/g, ""));
   };
 
+  const checkB4dispatch = () => {
+    if (amountEntered <= 0) {
+      Alert.alert("Invalid amount", "Please enter a value greater than 0", [
+        { text: "Cool!", style: "cancel", onPress: () => {} },
+      ]);
+    } else if (amountEntered > withdrawCap) {
+      Alert.alert(
+        "Invalid amount",
+        `Please enter a value upto ${withdrawCap}`,
+        [{ text: "Cool!", style: "cancel", onPress: () => {} }]
+      );
+    } else {
+      dispatchBillModal();
+    }
+  };
+
+  const dispatchBillModal = useCallback(() => {
+    dispatch(ModalActions.displayBill(amountEntered));
+  }, [dispatch]);
+
   return (
     <DismissKeyboard>
       <KeyboardAvoidingView style={styles.root} behavior="height">
+        <BillModal />
         <View style={styles.intro}>
           <Text style={styles.introText}>Hello, {firstName} !</Text>
         </View>
@@ -143,7 +169,7 @@ const DashScreen = () => {
           <View style={{ flex: 1 }}>
             <HideWithKeyboard>
               <View style={styles.butttonRegion}>
-                <Button title="PROCEED" />
+                <Button title="PROCEED" onPress={checkB4dispatch} />
               </View>
             </HideWithKeyboard>
           </View>

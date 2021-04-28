@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../constants/Colors";
 
+import * as ModalActions from "../store/modalHandler";
+
 import * as Scale from "../constants/Scale";
 //import CheckConnectivity from "../components/Connections/CheckConnectivity";
 
@@ -17,11 +19,14 @@ const screenWidth = Dimensions.get("screen").width;
 export default function BillModal() {
   const dispatch = useDispatch();
 
-  //const modalVisible = useSelector((state) => state.editPage.showReportModal);
+  const modalVisible = useSelector((state) => state.modal.modalVisible);
 
   const closeModal = () => {
-    dispatchReportHide();
+    dispatchModalHide();
   };
+  const dispatchModalHide = useCallback(() => {
+    dispatch(ModalActions.modalVisible(false));
+  }, [dispatch]);
 
   const thank = () => {
     closeModal();
@@ -33,13 +38,13 @@ export default function BillModal() {
   };
 
   const modalButton = async () => {
-    if (inputName.trim() !== "") {
+    /* if (inputName.trim() !== "") {
       const netStatus = await CheckConnectivity();
       if (netStatus) {
         dispatchReportFriend(friendHashID, inputName.trim());
         thank();
       }
-    }
+    } */
   };
 
   const modalHeader = (
@@ -50,15 +55,7 @@ export default function BillModal() {
 
   const modalBody = (
     <View style={styles.modalBody}>
-      <View style={styles.inputHolder}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="In brief, tell us why you're reporting them..."
-          onChangeText={textInputHandler}
-          value={inputName}
-          multiline={true}
-        />
-      </View>
+      <Text>yo</Text>
     </View>
   );
   const modalFooter = (
@@ -73,7 +70,7 @@ export default function BillModal() {
         }}
       >
         <CancelButton content="Cancel" onPress={closeModal} />
-        <Button content="Submit" onPress={modalButton} />
+        <Button title="Submit" onPress={modalButton} />
       </View>
     </View>
   );
@@ -117,29 +114,31 @@ const styles = StyleSheet.create({
     backgroundColor: "#f9fafb",
     width: screenWidth * 0.9,
     borderRadius: 5,
+    justifyContent: "space-between",
   },
-  modalHeader: { justifyContent: "center" },
+  modalHeader: { justifyContent: "center", height: "15%" },
 
   subTitle: {
     fontSize: 20,
     padding: 15,
-    color: ColorsLite.primary,
+    color: Colors.activeText,
     textAlign: "center",
-    fontFamily: "SenBold",
+    fontFamily: "ComoBold",
   },
 
   modalBody: {
-    //backgroundColor: "#fff",
-    //paddingVertical: 20,
-    //paddingHorizontal: 10,
-    borderWidth: 0,
     alignItems: "center",
+    height: "45%",
   },
 
-  modalFooter: { alignItems: "center" },
+  modalFooter: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: "15%",
+  },
 
   text: {
-    fontFamily: "SenReg",
+    fontFamily: "ComoReg",
     color: "gray",
     textAlign: "center",
     marginHorizontal: 10,
