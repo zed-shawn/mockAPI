@@ -86,7 +86,9 @@ const DashScreen = () => {
             <Text style={styles.numberText}>{withdrawCap}</Text>
           </View>
         </View>
-        <Separator halfWidth="20%" />
+        <View style={{ width: "100%", alignItems: "center" }}>
+          <Separator width="60%" />
+        </View>
         <View style={styles.withdrawBlock}>
           <View style={styles.withdrawHeader}>
             <Text style={styles.titleText}>Withdraw</Text>

@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import Colors from "../constants/Colors";
 
 import * as ModalActions from "../store/modalHandler";
+import { FontAwesome } from "@expo/vector-icons";
 
 import * as Scale from "../constants/Scale";
 //import CheckConnectivity from "../components/Connections/CheckConnectivity";
@@ -13,6 +14,8 @@ const vs = Scale.verticalScale;
 
 import CancelButton from "./design/CancelButton";
 import Button from "./design/Button";
+import Separator from "./design/Separator";
+import ListItem from "./ListItem";
 
 const screenWidth = Dimensions.get("screen").width;
 
@@ -20,6 +23,12 @@ export default function BillModal() {
   const dispatch = useDispatch();
 
   const modalVisible = useSelector((state) => state.modal.modalVisible);
+  const disburseAmount = useSelector((state) => state.modal.disburseAmount);
+
+  const commissionFlat = useSelector((state) => state.user.commission.flat);
+  const commissionPercent = useSelector(
+    (state) => state.user.commission.percentage
+  );
 
   const closeModal = () => {
     dispatchModalHide();
@@ -49,13 +58,33 @@ export default function BillModal() {
 
   const modalHeader = (
     <View style={styles.modalHeader}>
-      <Text style={styles.subTitle}>Order Confirmation:</Text>
+      <Text style={styles.subTitle}>Order Summary:</Text>
     </View>
   );
 
   const modalBody = (
     <View style={styles.modalBody}>
-      <Text>yo</Text>
+      <ListItem title={true} leftText="Bill Item" rightText="Amount" />
+      <ListItem
+        title={false}
+        leftText="Withdrawal Amount"
+        rightText={disburseAmount}
+      />
+      <ListItem
+        title={false}
+        leftText="Commission Charges"
+        rightText={disburseAmount}
+      />
+      <Separator width="80%" />
+      <View style={styles.sumView}>
+        <FontAwesome
+          name="rupee"
+          size={vs(28)}
+          color={Colors.activeText}
+          style={{ paddingTop: "1%" }}
+        />
+        <Text style={styles.sumText}>1242343</Text>
+      </View>
     </View>
   );
   const modalFooter = (
@@ -70,7 +99,7 @@ export default function BillModal() {
         }}
       >
         <CancelButton content="Cancel" onPress={closeModal} />
-        <Button title="Submit" onPress={modalButton} />
+        <Button title="Withdraw" onPress={modalButton} />
       </View>
     </View>
   );
@@ -128,13 +157,14 @@ const styles = StyleSheet.create({
 
   modalBody: {
     alignItems: "center",
-    height: "45%",
+    height: "40%",
   },
 
   modalFooter: {
     alignItems: "center",
     justifyContent: "center",
     height: "15%",
+    marginBottom: "5%",
   },
 
   text: {
@@ -142,5 +172,17 @@ const styles = StyleSheet.create({
     color: "gray",
     textAlign: "center",
     marginHorizontal: 10,
+  },
+  sumText: {
+    color: Colors.activeText,
+    fontFamily: "ComoBold",
+    fontSize: vs(28),
+    marginLeft: vs(10),
+  },
+  sumView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    width: "80%",
   },
 });
