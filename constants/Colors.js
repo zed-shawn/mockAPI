@@ -7,3 +7,4 @@ export default {
   inactiveText: "#6B717E",
   activeText: "#d6190d",
 };
+// All colors managed from here

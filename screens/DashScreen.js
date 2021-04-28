@@ -7,25 +7,29 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from "react-native";
-import Colors from "../constants/Colors";
-import * as Scale from "../constants/Scale";
+
 import { FontAwesome } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import HideWithKeyboard from "react-native-hide-with-keyboard";
+import Slider from "@react-native-community/slider";
+
 import PercentBox from "../components/design/PercentBox";
 import Button from "../components/design/Button";
 import DismissKeyboard from "../components/DismissKeyboard";
 import BillModal from "../components/BillModal";
-import { useDispatch, useSelector } from "react-redux";
-
 import Separator from "../components/design/Separator";
-import Slider from "@react-native-community/slider";
-import HideWithKeyboard from "react-native-hide-with-keyboard";
+
+import Colors from "../constants/Colors";
+import * as Scale from "../constants/Scale";
 import * as ModalActions from "../store/modalHandler";
 
-const vs = Scale.verticalScale;
+const vs = Scale.verticalScale; // Used to proportionally scale the app on different screen sizes.
 
 const DashScreen = () => {
   const dispatch = useDispatch();
-  const [amountEntered, setAmountEntered] = useState(0);
+  const [amountEntered, setAmountEntered] = useState(0); // The amount to be withdrawn
+
+  // These variables read values from state fetched via api call
   const firstName = useSelector((state) => state.user.creds.firstName);
   const earned = useSelector((state) => state.user.balance.monthlySalary);
   const available = useSelector((state) => state.user.balance.available);
@@ -37,12 +41,14 @@ const DashScreen = () => {
     (state) => state.user.status.disburseAllowed
   );
 
+  //Checks for numeric input
   const inputAmount = (inputText) => {
     if (inputText !== "") {
       setAmountEntered(parseInt(inputText.replace(/[^0-9]/g, "")));
     }
   };
 
+  //Conditional checking of business logic parameters
   const checkB4dispatch = () => {
     if (amountEntered <= 0) {
       Alert.alert("Invalid amount", "Please enter a value greater than 0", [
@@ -69,10 +75,12 @@ const DashScreen = () => {
     }
   };
 
+  //Resets amount everytime withdrawal is finalized
   useEffect(() => {
     setAmountEntered(0);
   }, [resetAmount]);
 
+  //Dispatches modal after clicking Proceed
   const dispatchBillModal = useCallback(
     (amount) => {
       dispatch(ModalActions.displayBill(amount));
@@ -133,7 +141,8 @@ const DashScreen = () => {
             </View>
           </View>
           <View style={{ flex: 1 }}>
-            <HideWithKeyboard>
+            {/* These parts hide when keyboard is dispayed, to declutter */} 
+            <HideWithKeyboard> 
               <View style={styles.sliderRegion}>
                 <View style={{ flex: 1, alignItems: "center" }}>
                   <Text style={styles.sliderText}>0</Text>

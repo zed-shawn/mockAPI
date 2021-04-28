@@ -1,39 +1,40 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, Text, View, Modal, Alert, Dimensions } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
-import Colors from "../constants/Colors";
-
-import * as ModalActions from "../store/modalHandler";
 import { FontAwesome } from "@expo/vector-icons";
 
 import * as Scale from "../constants/Scale";
-import CheckConnectivity from "../components/connections/CheckConnectivity";
+import Colors from "../constants/Colors";
 
-const vs = Scale.verticalScale;
+import * as ModalActions from "../store/modalHandler";
+import CheckConnectivity from "../components/connections/CheckConnectivity";
 
 import CancelButton from "./design/CancelButton";
 import Button from "./design/Button";
 import Separator from "./design/Separator";
 import ListItem from "./ListItem";
 
+const vs = Scale.verticalScale;
 const screenWidth = Dimensions.get("screen").width;
 
 export default function BillModal() {
   const dispatch = useDispatch();
 
+  // All the variables accessing value from state
   const modalVisible = useSelector((state) => state.modal.modalVisible);
   const disburseAmount = useSelector((state) => state.modal.disburseAmount);
-
   const commissionFlat = useSelector((state) => state.user.commission.flat);
   const commissionPercent = useSelector(
     (state) => state.user.commission.percentage
   );
+
+  // Calcluation of commission & total amount
   const commissionAmount = Math.ceil(
     commissionFlat + (disburseAmount * commissionPercent) / 100
   );
   const sumAmount = parseInt(disburseAmount) + commissionAmount;
 
+  // Dispatches to action
   const closeModal = () => {
     dispatchModalHide();
   };
@@ -44,6 +45,7 @@ export default function BillModal() {
     dispatch(ModalActions.resetAmount());
   }, [dispatch]);
 
+  //Modal functions
   const thank = () => {
     closeModal();
     Alert.alert(
@@ -56,11 +58,12 @@ export default function BillModal() {
   const modalButton = async () => {
     const netStatus = await CheckConnectivity();
     if (netStatus) {
-      dispatchResetAmount();
+      dispatchResetAmount(); // Sets amount to 0 on the dash screen 
       thank();
     }
   };
 
+  //Modal components
   const modalHeader = (
     <View style={styles.modalHeader}>
       <Text style={styles.subTitle}>Order Summary:</Text>

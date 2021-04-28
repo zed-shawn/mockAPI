@@ -17,6 +17,7 @@ function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
 
   async function loadClientDetails() {
+    // Checks for net connectivity, calls api, if successful -> passes onto state. Throws error otherwise.
     const netStatus = await CheckConnectivity();
     if (netStatus) {
       let response = await fetch(link);
@@ -34,6 +35,7 @@ function App() {
   }
 
   async function loadFonts() {
+    //Loads custom fonts
     await Font.loadAsync({
       ComoReg: require("./assets/fonts/Como.ttf"),
       ComoBold: require("./assets/fonts/ComoBold.ttf"),
@@ -42,6 +44,7 @@ function App() {
     setFontLoaded(true);
   }
   useEffect(() => {
+    // Runs at startup to call the loading functions
     loadFonts();
     loadClientDetails();
   }, []);
@@ -62,6 +65,7 @@ function App() {
 }
 
 function AppWrapper() {
+  // Wrapper is used as redux dispatch component is present in App body & hence not wrapped in <Provider>
   return (
     <Provider store={store}>
       <App />

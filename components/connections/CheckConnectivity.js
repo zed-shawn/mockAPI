@@ -1,6 +1,7 @@
 import * as Network from "expo-network";
 import { Alert } from "react-native";
 
+//Only checks for client side connection. Connection check to server can be added later.
 const CheckConnectivity = async () => {
   const netState = await Network.getNetworkStateAsync();
   if (netState.isInternetReachable) {
