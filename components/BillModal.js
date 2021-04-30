@@ -21,7 +21,7 @@ export default function BillModal() {
   const dispatch = useDispatch();
 
   // All the variables accessing value from state
-  const modalVisible = useSelector((state) => state.modal.modalVisible);
+  const modalVisible = useSelector((state) => state.modal.billModalVisible);
   const disburseAmount = useSelector((state) => state.modal.disburseAmount);
   const commissionFlat = useSelector((state) => state.user.commission.flat);
   const commissionPercent = useSelector(
@@ -38,8 +38,15 @@ export default function BillModal() {
   const closeModal = () => {
     dispatchModalHide();
   };
+  const closeAll = () => {
+    dispatchModalHide();
+    closeWithdrawModal();
+  };
   const dispatchModalHide = useCallback(() => {
-    dispatch(ModalActions.modalVisible(false));
+    dispatch(ModalActions.billModalVisible(false));
+  }, [dispatch]);
+  const closeWithdrawModal = useCallback(() => {
+    dispatch(ModalActions.withdrawModalVisible(false));
   }, [dispatch]);
   const dispatchResetAmount = useCallback(() => {
     dispatch(ModalActions.resetAmount());
@@ -47,18 +54,25 @@ export default function BillModal() {
 
   //Modal functions
   const thank = () => {
-    closeModal();
     Alert.alert(
       "Request sumbitted",
       "Your withdrawal would be processed soon!",
-      [{ text: "Cool!", style: "cancel", onPress: () => {} }]
+      [
+        {
+          text: "Cool!",
+          style: "cancel",
+          onPress: () => {
+            closeAll();
+          },
+        },
+      ]
     );
   };
 
   const modalButton = async () => {
     const netStatus = await CheckConnectivity();
     if (netStatus) {
-      dispatchResetAmount(); // Sets amount to 0 on the dash screen 
+      dispatchResetAmount(); // Sets amount to 0 on the dash screen
       thank();
     }
   };

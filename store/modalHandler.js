@@ -1,18 +1,32 @@
 const initialState = {
   disburseAmount: 0,
-  modalVisible: false,
+  billModalVisible: false,
+  withdrawModalVisible: false,
   resetTime: 0,
 };
 
-const MODAL_VISIBLE = "modalVisible";
+const BILL_MODAL_VISIBLE = "billModalVisible";
+const WITHDRAW_MODAL_VISIBLE = "withdrawModalVisible";
 const DISPLAY_BILL = "displayBill";
 const RESET_AMOUNT = "resetAmount";
 
-export function modalVisible(state) {
+export function withdrawModalVisible(state) {
   return async (dispatch) => {
     try {
       dispatch({
-        type: MODAL_VISIBLE,
+        type: WITHDRAW_MODAL_VISIBLE,
+        payload: { state },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+}
+export function billModalVisible(state) {
+  return async (dispatch) => {
+    try {
+      dispatch({
+        type: BILL_MODAL_VISIBLE,
         payload: { state },
       });
     } catch (error) {
@@ -47,16 +61,21 @@ export function resetAmount() {
 
 const modalReducer = (state = initialState, action) => {
   switch (action.type) {
-    case MODAL_VISIBLE:
+    case WITHDRAW_MODAL_VISIBLE:
       return {
         ...state,
-        modalVisible: action.payload.state,
+        withdrawModalVisible: action.payload.state,
+      };
+    case BILL_MODAL_VISIBLE:
+      return {
+        ...state,
+        billModalVisible: action.payload.state,
       };
     case DISPLAY_BILL:
       return {
         ...state,
         disburseAmount: action.payload.amount,
-        modalVisible: true,
+        billModalVisible: true,
       };
     case RESET_AMOUNT:
       return {
