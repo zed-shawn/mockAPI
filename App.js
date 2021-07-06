@@ -9,6 +9,7 @@ import CheckConnectivity from "./components/connections/CheckConnectivity";
 import MainNavigator from "./navigation/MainNavigator";
 import * as UserActions from "./store/userDetail";
 import { useDispatch, useSelector } from "react-redux";
+import dummyData from "./data/mockData";
 
 enableScreens();
 
@@ -16,7 +17,7 @@ function App() {
   const dispatch = useDispatch();
   const [fontLoaded, setFontLoaded] = useState(false);
 
-  async function loadClientDetails() {
+  /* async function loadClientDetails() {
     // Checks for net connectivity, calls api, if successful -> passes onto state. Throws error otherwise.
     const netStatus = await CheckConnectivity();
     if (netStatus) {
@@ -32,7 +33,7 @@ function App() {
         );
       }
     }
-  }
+  } */
 
   async function loadFonts() {
     //Loads custom fonts
@@ -43,11 +44,6 @@ function App() {
     });
     setFontLoaded(true);
   }
-  useEffect(() => {
-    // Runs at startup to call the loading functions
-    loadFonts();
-    loadClientDetails();
-  }, []);
 
   const dispatchUserDetails = useCallback(
     (data) => {
@@ -55,6 +51,13 @@ function App() {
     },
     [dispatch]
   );
+
+  useEffect(() => {
+    // Runs at startup to call the loading functions
+    loadFonts();
+    dispatchUserDetails(dummyData);
+    //loadClientDetails();
+  }, []);
 
   if (fontLoaded) {
     // If font has loaded, will load the app. Else will render nothing until font has loaded.

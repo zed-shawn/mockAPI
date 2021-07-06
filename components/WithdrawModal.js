@@ -45,7 +45,9 @@ export default function WithdrawModal() {
   //Checks for numeric input
   const inputAmount = (inputText) => {
     if (inputText !== "") {
-      setAmountEntered(parseInt(inputText.replace(/[^0-9]/g, "")));
+      if (inputText > available) {
+        setAmountEntered(parseInt(available));
+      } else setAmountEntered(parseInt(inputText.replace(/[^0-9]/g, "")));
     } else if (inputText == "") {
       setAmountEntered(0);
     }
